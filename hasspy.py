@@ -222,6 +222,15 @@ class Wait(YAMLObject):
             dd['timeout'] = Time.from_dict(d['timeout'])
         return Wait(**dd)
 
+class Delay(Time):
+    def __init__(self, hours: int = 0, minutes: int = 0, seconds: int = 0):
+        super().__init__(hours, minutes, seconds)
+
+    def to_dict(self):
+        return {
+            'delay': super().to_dict()
+        }
+
 class Entity(YAMLObject):
     def __init__(self, id: str):
         self.entity_id = id

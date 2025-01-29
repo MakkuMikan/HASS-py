@@ -1,4 +1,4 @@
-from hasspy import Automation, Action, Actions, Condition, Choose, Choice, Wait, Trigger, Variables, Time, Entity, Area, Parallel, Data
+from hasspy import Automation, Action, Actions, Condition, Choose, Choice, Delay, Wait, Trigger, Variables, Time, Entity, Area, Parallel, Data
 
 wake_up = Automation(
     alias='Wake Up',
@@ -28,6 +28,7 @@ wake_up = Automation(
         ),
         Action('light.turn_on', data=Data(kelvin=2000,
                brightness_pct=1), target=Area('jack_s_bedroom')),
+        Delay(seconds=15),
         Parallel(
             Action('script.light_fade', data=Data(
                 lampBrightnessScale='zeroToTwoFiftyFive',

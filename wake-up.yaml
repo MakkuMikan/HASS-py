@@ -60,6 +60,10 @@ actions:
       brightness_pct: 1
     target:
       area_id: jack_s_bedroom
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
   - parallel:
       - action: script.light_fade
         metadata: {}
