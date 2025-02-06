@@ -1,11 +1,13 @@
 import yaml
-from components import Actions, Conditions, Trigger
-from components.core import YAMLObject
-from components.core import Dumper
+from hasspy.components.actions import Actions
+from hasspy.components.conditions import Conditions
+from hasspy.components.core import YAMLObject
+from hasspy.components.core import Dumper
+from hasspy.components.triggers import Triggers
 
 
 class Automation(YAMLObject):
-    def __init__(self, alias: str, description: str = '', mode: str = 'single', triggers: list[Trigger] = [], conditions: Conditions = [], actions: Actions = []):
+    def __init__(self, alias: str, description: str = '', mode: str = 'single', triggers: Triggers = [], conditions: Conditions = [], actions: Actions = []):
         self.alias = alias
         self.description = description
         self.mode = mode
@@ -33,8 +35,8 @@ class Automation(YAMLObject):
     @staticmethod
     def from_dict(d: dict):
         dd = {
-            'triggers': [Trigger.from_dict(trigger) for trigger in d['triggers']],
-            'conditions': [Conditions.from_dict(d['conditions'])],
+            'triggers': Triggers.from_dict(d['triggers']),
+            'conditions': Conditions.from_dict(d['conditions']),
             'actions': Actions.from_dict(d['actions'])
         }
         for key in d:

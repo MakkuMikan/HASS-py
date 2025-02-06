@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
     name='hasspy',
     version='0.1.0',
-    packages=['hasspy', 'hasspy.components', 'hasspy.components.core'],
+    packages=find_packages(),
     install_requires=[
         'PyYAML'
     ],

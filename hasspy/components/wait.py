@@ -1,13 +1,16 @@
-from components import Entity, Time, Trigger
-from components.core import YAMLObject
+from hasspy.components.core import Time, YAMLObject
+from hasspy.components.triggers import Trigger, Triggers
 
 
 class Wait(YAMLObject):
-    def __init__(self, *triggers: Trigger, timeout: Time = None, continue_on_timeout: bool = False):
-        self.triggers = triggers
+    def __init__(self, *triggers: Trigger | Triggers, timeout: Time = None, continue_on_timeout: bool = False):
+        self.triggers = triggers[0] if isinstance(triggers[0], Triggers) else triggers
         if timeout is not None:
             self.timeout = timeout
         self.continue_on_timeout = continue_on_timeout
+
+    def Time(at: str, **kwargs):
+        return Wait(Trigger.Time(at), **kwargs)
 
     class Zone:
         @staticmethod
@@ -36,3 +39,13 @@ class Wait(YAMLObject):
         if 'timeout' in d:
             dd['timeout'] = Time.from_dict(d['timeout'])
         return Wait(**dd)
+
+
+class Delay(Time):
+    def __init__(self, hours: int = 0, minutes: int = 0, seconds: int = 0):
+        super().__init__(hours, minutes, seconds)
+
+    def to_dict(self):
+        return {
+            'delay': super().to_dict()
+        }

@@ -1,4 +1,4 @@
-from components.core import YAMLObject
+from hasspy.components.core import YAMLObject
 
 
 class Trigger(YAMLObject):
@@ -6,9 +6,9 @@ class Trigger(YAMLObject):
 
     def __init__(self, trigger: str, **kwargs):
         self.trigger = trigger
-        self.kwargs = [x for x in kwargs if x not in ['from_']]
+        self.kwargs = {x: y for x, y in kwargs.items() if x not in ['from_']}
         if 'from_' in kwargs:
-            self.kwargs.append('from', kwargs['from_'])
+            self.kwargs['from'] = kwargs['from_']
     
     @staticmethod
     def Calendar(entity_id: str, event: str, offset: str, **kwargs):
@@ -19,8 +19,8 @@ class Trigger(YAMLObject):
         return Trigger('time', at=at, **kwargs)
     
     @staticmethod
-    def State(entity_id: str, from_: str, to: str, **kwargs):
-        return Trigger('state', entity_id=entity_id, from_=from_, to=to, **kwargs)
+    def State(entity_id: str | list[str], from_: str, to: str, **kwargs):
+        return Trigger('state', entity_id=entity_id if isinstance(entity_id, list) else [entity_id], from_=from_, to=to, **kwargs)
     
     class Zone:
         @staticmethod
@@ -36,3 +36,15 @@ class Trigger(YAMLObject):
             'trigger': self.trigger,
             **self.kwargs
         }
+
+
+class Triggers(YAMLObject):
+    def __init__(self, *triggers: Trigger):
+        self.triggers = triggers
+
+    def to_dict(self):
+        return [trigger.to_dict() for trigger in self.triggers]
+    
+    @staticmethod
+    def from_dict(d: dict):
+        return Triggers([Trigger.from_dict(trigger) for trigger in d])
